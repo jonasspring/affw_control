@@ -40,6 +40,7 @@
 #include <signal.h>
 
 #include "affw/affw.h"
+#include <affw/Config.h>
 
 typedef float AFFW_FLOAT;
 
@@ -78,6 +79,7 @@ bool forceZeroIfStateZero = true;
 std::string learner_type = "";
 std::string configFolder;
 std::string configName;
+
 
 
 void createLearner(int dim, int stateDim)

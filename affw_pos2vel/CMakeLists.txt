@@ -14,5 +14,7 @@ catkin_package(
   CATKIN_DEPENDS roscpp nav_msgs tf
 )
 
+include_directories(${catkin_INCLUDE_DIRS} include)
+
 add_executable(affw_pos2vel src/affw_pos2vel.cpp)
 target_link_libraries(affw_pos2vel ${catkin_LIBRARIES})
