@@ -89,12 +89,12 @@ void feedbackVelCallback(const nav_msgs::Odometry::ConstPtr& odom) {
   velIn_ang.vector = odom->twist.twist.angular;
 
   try{
-    ROS_INFO("Wait: %s", odom->header.frame_id.c_str());
+    //ROS_INFO("Wait: %s", odom->header.frame_id.c_str());
     listener->waitForTransform("base_link", odom->header.frame_id, odom->header.stamp, ros::Duration(3.0));
     //listener.waitForTransform("world", "base_link", odom->header.stamp, ros::Duration(3.0));
     listener->transformVector("base_link", velIn_lin, velIn_lin);
     listener->transformVector("base_link", velIn_ang, velIn_ang);
-    ROS_INFO("END_WAIT");
+    //ROS_INFO("END_WAIT");
   }
   catch (tf::TransformException ex)
   {
