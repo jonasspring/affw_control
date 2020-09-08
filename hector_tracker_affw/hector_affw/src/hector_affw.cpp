@@ -51,7 +51,7 @@ void setVelCallback(const geometry_msgs::Twist::ConstPtr& vel) {
 
 	if(usePose)
 	{
-    ROS_INFO("usePose");
+    //ROS_INFO("usePose");
 		if(!lastOdomReceived)
 			return;
 		tf::Quaternion q;
@@ -64,19 +64,19 @@ void setVelCallback(const geometry_msgs::Twist::ConstPtr& vel) {
 		srv.request.state.custom.push_back(pitch);
 	}
 
-	if (srv_action.call(srv)) {
-		geometry_msgs::Twist outVel;
-		outVel.linear.x = srv.response.outVel[0];
-		outVel.angular.z = srv.response.outVel[1];
+  if (srv_action.call(srv)) {
+    geometry_msgs::Twist outVel;
+    outVel.linear.x = srv.response.outVel[0];
+    outVel.angular.z = srv.response.outVel[1];
 
     ROS_INFO("lin: outvel: %f, target: %f, diff: %f", outVel.linear.x, vel->linear.x, vel->linear.x - outVel.linear.x);
     ROS_INFO("ang: outvel: %f, target: %f, diff: %f", outVel.angular.z, vel->angular.z, vel->angular.z - outVel.angular.z);
 
-		pub_set_vel.publish(outVel);
-		ros::spinOnce();
-	} else {
-		ROS_ERROR_THROTTLE(1, "Failed to get action from affw");
-	}
+    pub_set_vel.publish(outVel);
+    ros::spinOnce();
+  } else {
+    ROS_ERROR_THROTTLE(1, "Failed to get action from affw");
+  }
 }
 
 void feedbackVelCallback(const nav_msgs::Odometry::ConstPtr& odom) {
@@ -88,19 +88,19 @@ void feedbackVelCallback(const nav_msgs::Odometry::ConstPtr& odom) {
   velIn_ang.header = odom->header;
   velIn_ang.vector = odom->twist.twist.angular;
 
-  try{
-    //ROS_INFO("Wait: %s", odom->header.frame_id.c_str());
-    listener->waitForTransform("base_link", odom->header.frame_id, odom->header.stamp, ros::Duration(3.0));
-    //listener.waitForTransform("world", "base_link", odom->header.stamp, ros::Duration(3.0));
-    listener->transformVector("base_link", velIn_lin, velIn_lin);
-    listener->transformVector("base_link", velIn_ang, velIn_ang);
-    //ROS_INFO("END_WAIT");
-  }
-  catch (tf::TransformException ex)
-  {
-    ROS_ERROR("%s", ex.what());
-    return;
-  }
+//  try{
+//    //ROS_INFO("Wait: %s", odom->header.frame_id.c_str());
+//    listener->waitForTransform("base_link", odom->header.frame_id, odom->header.stamp, ros::Duration(3.0));
+//    //listener.waitForTransform("world", "base_link", odom->header.stamp, ros::Duration(3.0));
+//    listener->transformVector("base_link", velIn_lin, velIn_lin);
+//    listener->transformVector("base_link", velIn_ang, velIn_ang);
+//    //ROS_INFO("END_WAIT");
+//  }
+//  catch (tf::TransformException ex)
+//  {
+//    ROS_ERROR("%s", ex.what());
+//    return;
+//  }
 
 //	geometry_msgs::Vector3 velIn = odom->twist.twist.linear;
 	affw_msgs::State state;
@@ -109,7 +109,9 @@ void feedbackVelCallback(const nav_msgs::Odometry::ConstPtr& odom) {
   state.vel.push_back(velIn_lin.vector.x);
   state.vel.push_back(velIn_ang.vector.z);
 
-	pub_fdbk_state.publish(state);
+  if((!isnan(velIn_lin.vector.x)) && (!isnan(velIn_lin.vector.x))){
+    pub_fdbk_state.publish(state);
+  }
 	ros::spinOnce();
 }
 

@@ -8,13 +8,14 @@
 	
 	<!-- map from pose to velocity -->
 	<param name="pose_topic" value="/robot_pose" />
-	<param name="state_topic" value="/odom" />
+	<param name="state_topic" value="/odom_local" />
 	<param name="transform2Local" value="true" />
 	<!-- node name="affw_pos2vel" pkg="affw_pos2vel" type="affw_pos2vel" output="screen" /-->
+<node name="affw_pos2vel" pkg="affw_pos2vel" type="affw_pos2vel" output="screen" />
 	
 	<!-- start affw controller nodes -->
 	<param name="cmd_vel_topic" value="/cmd_vel_raw" />
-	<param name="usePose" value="true" />
+	<param name="usePose" value="false" />
 	<node name="hector_affw" pkg="hector_affw" type="hector_affw" output="screen" />
 	<node name="affw_ctrl" pkg="affw_ctrl" type="affw_ctrl" output="screen" />
 </launch>
